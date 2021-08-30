@@ -1,4 +1,6 @@
+import requests
 imgHost="http://oos.mmlang.com/"
+oosHost="http://oos.mmlang.com/"
 def images_site(imgurl):
     if imgurl=="" :
         return ""
@@ -19,4 +21,14 @@ def parseTrueImgList(ss):
             "imgurl":arr[i],
             "trueimgurl":images_site(arr[i])
         })
-    return list    
+    return list
+def upload(filename):
+    files = {'upimg': (filename, open(filename, 'rb'))}
+
+    response = requests.post(
+        oosHost+"/upload.php",
+        files=files,
+        data={'accessToken': "Hello","filename":filename.replace("..","")}
+    )
+    return True  
+ 

@@ -1,0 +1,3 @@
+baseconfig={
+    "smsTest":True
+}

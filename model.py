@@ -2,6 +2,7 @@
 import pymysql
 import importlib
 from config.database import dbconfig
+ 
 conn = pymysql.connect(
     host=dbconfig["host"],
     user=dbconfig["user"], 
@@ -41,20 +42,40 @@ class Model:
     sstart=0;slimit=1
     stable=""
     stable_pre=dbconfig["table_pre"]
+    conn=None
+    def connect(self):
+        self.conn = pymysql.connect(
+            host=dbconfig["host"],
+            user=dbconfig["user"], 
+            password=dbconfig["password"], 
+            database=dbconfig["database"], 
+            charset=dbconfig['charset']
+        )
     def setDb(self,conn):
         self.conn=conn
     def query(self,sql,params=()):
         cursor=self.conn.cursor()
         cursor.execute(sql,params)
-        self.conn.commit()
+    def reQuery(self,cursorType,sql,params):
+        try:
+            cursor = self.conn.cursor(cursor=cursorType)
+            cursor.execute(sql,params)
+        except pymysql.OperationalError:
+            self.connect()
+            cursor = self.conn.cursor(cursor=cursorType)
+            cursor.execute(sql,params)
+        return cursor    
+
     def getAll(self,sql,params=()):
-        cursor = self.conn.cursor(cursor = pymysql.cursors.DictCursor)
-        cursor.execute(sql,params)
+        #cursor = self.conn.cursor(cursor = pymysql.cursors.DictCursor)
+        #cursor.execute(sql,params)
+        cursor=self.reQuery(pymysql.cursors.DictCursor,sql,params)
         lists=cursor.fetchall()
         return lists
     def getCols(self,sql,params=()):
-        cursor = self.conn.cursor()
-        cursor.execute(sql,params)
+        #cursor = self.conn.cursor()
+        # cursor.execute(sql,params)
+        cursor=self.reQuery(None,sql,params)
         lists=cursor.fetchall()
         res=[]
         if lists:
@@ -62,33 +83,24 @@ class Model:
                 res.append(item[0])
             return res       
     def getRow(self,sql,params=()):
-        cursor = self.conn.cursor(cursor = pymysql.cursors.DictCursor)
-        cursor.execute(sql,params)
+  
+        cursor=self.reQuery( pymysql.cursors.DictCursor,sql,params)
         lists=cursor.fetchone()
         return lists
     def getOne(self,sql,params=()):
-        cursor = self.conn.cursor()
-        cursor.execute(sql,params)
+
+        cursor=self.reQuery(None,sql,params)
         row=cursor.fetchone()
         if row:
             return row[0]     
-    def insert(self,sql,params=()):
-        cursor=self.conn.cursor()
-        cursor.execute(sql,params)
-        id=cursor.lastrowid
+        
+    def commit(self):
         self.conn.commit()
-        return id
-    def update(self,sql,params=()):
-        cursor=self.conn.cursor()
-        cursor.execute(sql,params)
-        self.conn.commit()
-    def delete(self,sql,params=()):
-        cursor=self.conn.cursor()
-        cursor.execute(sql,params)
-        self.conn.commit()    
-
+    def rollback(self):
+        self.conn.rollback()    
     def close(self):
         self.conn.close()
+    #链式操作开始    
     def initParam(self):
         self.sfield="*";self.swhere="";self.sorder=""
         self.sstart=0;self.slimit=1
@@ -120,17 +132,44 @@ class Model:
         sql+=" limit "+str(self.sstart)+","+str(self.slimit)  
         self.initParam()  
         return sql      
-    def all(self):
+    def all(self,params=()):
         sql=self.initSql()
-        return self.getAll(sql)
-    def row(self):
+        return self.getAll(sql,params)
+    def row(self,params=()):
         sql=self.initSql() 
-        return self.getRow(sql)
-    def one(self):
+        return self.getRow(sql,params)
+    def one(self,params=()):
         sql=self.initSql() 
-        return self.getOne(sql)
-    def cols(self):
+        return self.getOne(sql,params)
+    def cols(self,params=()):
         sql=self.initSql()
-        return self.getCols(sql) 
+        return self.getCols(sql,params)
+    def count(self,params=()):
+        self.sfield=" count(*) as ct "
+        sql=self.initSql()
+        return self.getOne(sql,params)    
+    def insert(self,data,params=()):
+        sql="insert into "+self.stable+" set "+data 
+        cursor=self.conn.cursor()
+        cursor.execute(sql,params)
+        id=cursor.lastrowid
+        
+        return id
+    def update(self,data,params=()):
+        sql="update  "+self.stable+" set "+data 
+        if(self.swhere!=""):
+            sql+=" where "+self.swhere
+        else:
+            return False 
+        self.initParam()    
+        cursor=self.conn.cursor()
+        cursor.execute(sql,params)
+    def delete(self,params=()):
+        sql="delete * from "+self.stable
+        if(self.swhere!=""):
+            sql+=" where "+self.swhere
+        self.initParam() 
+        cursor=self.conn.cursor()
+        cursor.execute(sql,params)  
 
     

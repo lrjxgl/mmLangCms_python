@@ -1,4 +1,4 @@
-import os, sys
+import os
 def getCtrl(mds):
     refile=[]
     for m in mds:
@@ -14,15 +14,17 @@ def getCtrl(mds):
                     mfile=mfile.replace("/",".")
                     refile.append(mfile) 
     return refile
-mds=[
-    {
-        "path":"../index",
-        "apps":["index","admin"]
-    },
-    {
-        "path":"../forum",
-        "apps":["index","admin"]
-    }
-]    
-files=getCtrl(mds)  
-print(files)
+def getMods():
+    mds=[
+        {
+            "path":"index",
+            "apps":["index","admin"]
+        },
+        {
+            "path":"forum",
+            "apps":["index","admin"]
+        }
+    ]    
+    files=getCtrl(mds) 
+    return files
+
