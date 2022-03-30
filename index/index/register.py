@@ -58,9 +58,11 @@ async def save(
     )
     token=setToken(userid,pwd)  
     userModel.commit()
-    token["error"]=0
-    token["message"]="success"
-    return token
+    return {
+        "error":0,
+        "message":"success",
+        "data":token
+    }
 @router.get("/sendsms")
 async def sendSms(
     telephone:Optional[str]=""
@@ -86,5 +88,5 @@ async def sendSms(
     cache.commit()
     return {
         "error":0,
-        "message":"success"
+        "message":"短信发送成功"
     }  

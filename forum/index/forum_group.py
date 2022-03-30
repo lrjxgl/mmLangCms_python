@@ -10,7 +10,15 @@ async def index():
     for i in range(len(list)):
         list[i]["imgurl"]=oos.images_site(list[i]["imgurl"])
     rscount=MM("forum","forumGroup").fields("count(*)").one()
-    return {"list":list,"rscount":rscount}
+    return {
+        "error":0,
+        "message":"success",
+        "data":{
+            "list":list,
+            "rscount":rscount
+        }
+        
+    }
 @router.get("/show")
 async def show(id: Optional[int] = None):
     msg  ="forum show"+str(id)

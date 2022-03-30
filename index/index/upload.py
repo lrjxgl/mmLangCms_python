@@ -35,6 +35,9 @@ async def img(upimg: UploadFile = File(...),thumb:Optional[str]=""):
     return {
         "error":0,
         "message":"success",
-        "imgurl":filename,
-        "trueimgurl":oos.images_site(filename)
+        "data":{
+            "imgurl":filename,
+            "trueimgurl":oos.images_site(filename)
+        }
+        
     }

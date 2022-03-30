@@ -1,20 +1,20 @@
-from fastapi import APIRouter
 from typing import Optional
+from fastapi import APIRouter
 from model import MM
 import ext.oos as oos
 from ext.userAccess import checkAccess
-router = APIRouter(prefix="/forum_home")
+router = APIRouter(prefix="/forum_feeds")
 @router.get("/index")
 async def index(
     token:Optional[str]="",
-    userid:Optional[int]=0,
     per_page:Optional[int]=0
 ):
     ssuserid=checkAccess(token)
-    user=MM("index","user").get(userid)
+    if(ssuserid==0):
+        return goLogin()
     start=per_page
     limit=12
-    w=" status in(0,1,2) AND userid=%d " %(userid)
+    w=" status=1 AND userid=%d " %(ssuserid)
     
     list=MM("forum","forum").where(w).limit(start,limit).Dselect()
     rscount=MM("forum","forum").where(w).count()
@@ -27,7 +27,6 @@ async def index(
             "list":list,
             "per_page":per_page,
             "rscount":rscount,
-            "user":user
         }
         
   

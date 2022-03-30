@@ -58,6 +58,7 @@ class Model:
         cursor.execute(sql,params)
     def reQuery(self,cursorType,sql,params):
         try:
+            self.conn.ping(reconnect=True)
             cursor = self.conn.cursor(cursor=cursorType)
             cursor.execute(sql,params)
         except pymysql.OperationalError:
@@ -150,8 +151,7 @@ class Model:
         return self.getOne(sql,params)    
     def insert(self,data,params=()):
         sql="insert into "+self.stable+" set "+data 
-        cursor=self.conn.cursor()
-        cursor.execute(sql,params)
+        cursor=self.reQuery(None,sql,params)
         id=cursor.lastrowid
         
         return id
@@ -162,14 +162,12 @@ class Model:
         else:
             return False 
         self.initParam()    
-        cursor=self.conn.cursor()
-        cursor.execute(sql,params)
+        cursor=self.reQuery(None,sql,params)
     def delete(self,params=()):
-        sql="delete * from "+self.stable
+        sql="delete  from "+self.stable
         if(self.swhere!=""):
             sql+=" where "+self.swhere
         self.initParam() 
-        cursor=self.conn.cursor()
-        cursor.execute(sql,params)  
+        cursor=self.reQuery(None,sql,params) 
 
     

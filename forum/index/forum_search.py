@@ -17,7 +17,10 @@ async def index(
         return {
             "error":0,
             "message":"success",
-            "list":recList 
+            "data":{
+                "list":recList 
+            }
+            
         }
     w=" title like %s AND status=1 "    
     list=MM("forum","forum").where(w).limit(start,limit).Dselect('%'+keyword+'%')
@@ -26,9 +29,12 @@ async def index(
     return {
         "error":0,
         "message":"success",
-        "list":list,
-        "rscount":rscount,
-        "per_page":per_page
+        "data":{
+            "list":list,
+            "rscount":rscount,
+            "per_page":per_page
+        }
+        
         
     }
  

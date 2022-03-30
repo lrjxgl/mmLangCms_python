@@ -7,7 +7,7 @@ import importlib
 from ext.routes import getMods
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/attach", StaticFiles(directory="attach"), name="attach")
+#app.mount("/attach", StaticFiles(directory="attach"), name="attach")
 ##cors
 app.add_middleware(
     CORSMiddleware,

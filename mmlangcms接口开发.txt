@@ -1,0 +1,52 @@
+mmlangCms接口开发
+#前端
+pages/index/index
+pages/web/index
+pages/article/index
+pages/article/list
+pages/article/show
+pages/city/index
+pages/comment/my
+pages/coupon/index
+pages/coupon_user/index
+pages/fav/my
+pages/follow/index
+pages/gold_log/my
+pages/html/aboutus
+pages/invite/my
+pages/invite_account_log/index
+pages/kefu/index
+pages/login/index 完成
+pages/login/findpwd 完成
+pages/notice/my
+pages/pay_log/my
+pages/pm/index
+pages/pm/detail
+pages/recharge/my
+pages/recharge/index
+pages/recharge/order
+pages/register/index
+pages/user/index
+pages/user/info 完成
+pages/user/user_head
+pages/user/password
+pages/user/paypwd
+pages/user/telephone
+pages/user_address/my
+pages/user_address/add
+pages/user/set
+forum/show 完成 
+forum/my 完成 
+forum/add 完成 
+forum/edit 完成 
+forum/index 完成 
+forum/list 完成 
+forum_fav/index
+forum_group/index完成 
+forum/new 完成  
+forum_feeds/index
+forum_search/index 完成  
+forum_paihang/index 完成  
+forum_home/index 完成  
+forum/user 完成  
+forum_comment/my

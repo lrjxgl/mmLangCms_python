@@ -1,5 +1,6 @@
 import hashlib
 import ext.cache as cache
+import time
 def setToken(userid,password):
     p1=password[0:16]
     p1m=hashlib.md5(p1.encode(encoding='utf-8')).hexdigest()
@@ -12,9 +13,9 @@ def setToken(userid,password):
     cache.cacheSet(refresh_token,userid,refresh_token_expire)
     return {
         "token":token,
-        "token_expire":token_expire,
+        "token_expire":int(time.time())+ token_expire,
         "refresh_token":refresh_token,
-        "refresh_token_expire":refresh_token_expire
+        "refresh_token_expire":int(time.time())+refresh_token_expire
     }
 def checkAccess(token):
     row=cache.cacheGet(token)
@@ -22,6 +23,8 @@ def checkAccess(token):
         return 0
 
     return int(row)
+def delToken(token):
+    cache.cacheDel(token)    
 def goLogin():
     return {
         "error":1000,

@@ -18,11 +18,13 @@ async def index():
      
     return {
         "error":0,
-        "message": "success",       
-        "flashList":flashList,
-        "navList":navList,        
-        "adList":adList,
-        "recList":recList
+        "message": "success", 
+        "data":{    
+            "flashList":flashList,
+            "navList":navList,        
+            "adList":adList,
+            "recList":recList
+        }  
     }
 @router.get("/list")
 async def list(
@@ -44,11 +46,14 @@ async def list(
     return {
         "error":0,
         "message":"success",
-        "list":list,
-        "per_page":per_page,
-        "rscount":rscount,
-        "group":group,
-        "catList":catList
+        "data":{
+            "list":list,
+            "per_page":per_page,
+            "rscount":rscount,
+            "group":group,
+            "catList":catList
+        }
+        
     }  
 
 @router.get("/new")
@@ -68,9 +73,11 @@ async def new(
     return {
         "error":0,
         "message":"success",
-        "list":list,
-        "per_page":per_page,
-        "rscount":rscount,
+        "data":{
+            "list":list,
+            "per_page":per_page,
+            "rscount":rscount
+        }
   
     }      
 @router.get("/show")
@@ -87,7 +94,15 @@ async def show(id: Optional[int] = None):
     data["timeago"]=data["createtime"].strftime('%Y-%m-%d %H:%M:%S')
     author=MM("index","user").get(data["userid"])
      
-    return {"data":data,"author":author}
+    return {
+        "error":0,
+        "message":"success",
+        "data":{
+            "data":data,
+            "author":author
+        }
+        
+    }
 
 @router.get("/my")
 async def my(
@@ -108,9 +123,12 @@ async def my(
     return {
         "error":0,
         "message":"success",
-        "list":list,
-        "per_page":per_page,
-        "rscount":rscount,
+        "data":{
+            "list":list,
+            "per_page":per_page,
+            "rscount":rscount
+        }
+        
   
     } 
 @router.get("/add")
@@ -129,9 +147,14 @@ async def add(
         imgList=oos.parseTrueImgList(data["imgsdata"])
     groupList=MM("forum","forumGroup").groupChild();    
     return {
-        "data":data,
+        "error":0,
+        "message":"success",
+        "data":{
+            "data":data,
         "groupList":groupList,
         "imgList":imgList
+        }
+        
     }
 
 @router.post("/save")
@@ -171,7 +194,10 @@ async def save(
     return {
         "error":0,
         "message":"success",
-        "id":id
+        "data":{
+            "id":id
+        }
+        
     }    
 
 @router.get("/delete")
@@ -206,9 +232,12 @@ async def user(token:Optional[str]=""):
     return {
         "error":0,
         "message":"success",
-        "user":user,
+        "data":{
+            "user":user,
         "topic_num":topic_num,
         "comment_num":comment_num
+        }
+        
     }    
 
 @router.get("/addclick")

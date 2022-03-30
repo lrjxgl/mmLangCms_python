@@ -2,7 +2,7 @@ from typing import Optional
 from fastapi import APIRouter,Form
 from model import DB,MM
 
-router = APIRouter(prefix="")
+router = APIRouter(prefix="/fav")
 @router.get("/")
 def index():
     return {
@@ -13,7 +13,7 @@ def index():
 def test():
     
     id= MM("index","love").insert("tablename='test',objectid=1, userid=1 ")  
-    MM("index","love").commit()
+    MM("index","love").connect()
     fid= MM("index","fav").insert("tablename='test',objectid=1 , userid=1 ")  
     MM("index","fav").commit()
     return {
